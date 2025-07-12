@@ -24,6 +24,7 @@ import {
   IonSegmentButton,
 } from '@ionic/angular/standalone';
 import { TaskService, Task, Category } from '../services/task.service';
+import { RemoteConfigService } from '../services/remote-config.service';
 
 @Component({
   selector: 'app-home',
@@ -57,17 +58,20 @@ export class HomePage {
   categories: Category[] = [];
   filteredTasks: Task[] = [];
   selectedCategory: number | 'all' = 'all';
+  public categoryFilterEnabled = false;
 
   constructor(
     private taskService: TaskService,
     private alertCtrl: AlertController,
-    private router: Router
+    private router: Router,
+    private remoteConfigService: RemoteConfigService
   ) {}
 
   ionViewWillEnter() {
     this.tasks = this.taskService.getTasks();
     this.categories = this.taskService.getCategories();
     this.filterTasks();
+    this.categoryFilterEnabled = this.remoteConfigService.isCategoryFilterEnabled();
   }
 
   async promptAddTask() {
