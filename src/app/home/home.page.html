@@ -21,10 +21,16 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-item-sliding *ngFor="let task of filteredTasks" #slidingItem>
+  <cdk-virtual-scroll-viewport [itemSize]="75" class="ion-content-scroll-host">
+
+    <ion-item-sliding *cdkVirtualFor="let task of filteredTasks; let i = index; trackBy: trackByTaskId">
+
       <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="task.completed" (ionChange)="onStatusChange(task)"></ion-checkbox>
+        <ion-checkbox
+          slot="start"
+          [(ngModel)]="task.completed"
+          (ionChange)="onStatusChange(task)"
+        ></ion-checkbox>
         <ion-label (click)="changeTaskCategory(task)">
           <h2 [class.completed]="task.completed">{{ task.title }}</h2>
           <p>{{ getCategoryName(task.categoryId) }}</p>
@@ -32,12 +38,14 @@
       </ion-item>
 
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteTask(task, slidingItem)">
+        <ion-item-option color="danger" (click)="deleteTask(task, i)">
           Eliminar
         </ion-item-option>
       </ion-item-options>
+
     </ion-item-sliding>
-  </ion-list>
+
+  </cdk-virtual-scroll-viewport>
 
   <div *ngIf="tasks.length === 0" class="ion-text-center ion-padding">
     <p>¡No tienes tareas! Añade una para empezar.</p>

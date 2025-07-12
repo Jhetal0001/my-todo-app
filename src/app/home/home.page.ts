@@ -1,28 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  AlertController,
-  AlertInput,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonList,
-  IonItemSliding,
-  IonItem,
-  IonCheckbox,
-  IonLabel,
-  IonItemOptions,
-  IonItemOption,
-  IonFab,
-  IonIcon,
-  IonFabButton,
-  IonButtons,
-  IonButton,
-  IonSegmentButton,
-} from '@ionic/angular/standalone';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { IonicModule, AlertController, IonItemSliding, AlertInput } from '@ionic/angular';
 import { TaskService, Task, Category } from '../services/task.service';
 import { RemoteConfigService } from '../services/remote-config.service';
 
@@ -30,27 +11,12 @@ import { RemoteConfigService } from '../services/remote-config.service';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    IonSegmentButton,
-    IonButton,
-    IonButtons,
-    IonFabButton,
-    IonIcon,
-    IonFab,
-    IonItemOption,
-    IonItemOptions,
-    IonLabel,
-    IonCheckbox,
-    IonItem,
-    IonItemSliding,
-    IonList,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
     CommonModule,
     FormsModule,
+    IonicModule,
+    ScrollingModule
   ],
 })
 export class HomePage {
@@ -72,6 +38,10 @@ export class HomePage {
     this.categories = this.taskService.getCategories();
     this.filterTasks();
     this.categoryFilterEnabled = this.remoteConfigService.isCategoryFilterEnabled();
+  }
+
+  trackByTaskId(index: number, task: Task): number {
+    return task.id;
   }
 
   async promptAddTask() {
@@ -167,10 +137,10 @@ export class HomePage {
     this.taskService.updateTask(task);
   }
 
-  deleteTask(task: Task, slidingItem: IonItemSliding) {
-    this.taskService.deleteTask(task.id);
-    this.ionViewWillEnter();
-    slidingItem.close();
+  deleteTask(taskToDelete: Task, index: number) {
+    this.taskService.deleteTask(taskToDelete.id);
+    this.tasks = this.tasks.filter(task => task.id !== taskToDelete.id);
+    this.filteredTasks = this.filteredTasks.filter(task => task.id !== taskToDelete.id);
   }
 
   getCategoryName(id?: number): string {
