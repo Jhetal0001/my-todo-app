@@ -8,7 +8,7 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar>
+  <ion-toolbar *ngIf="categoryFilterEnabled">
     <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterTasks()" scrollable>
       <ion-segment-button value="all">
         <ion-label>Todas</ion-label>
