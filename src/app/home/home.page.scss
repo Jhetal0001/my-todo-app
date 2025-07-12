@@ -1,4 +1,9 @@
-.completed {
+ion-label h2.completed {
   text-decoration: line-through;
   color: #888;
+}
+
+ion-label p {
+  font-size: 0.8em;
+  color: #666;
 }
