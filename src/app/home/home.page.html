@@ -1,21 +1,47 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Mi Lista de Tareas</ion-title>
+    <ion-title>Mis Tareas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goToCategories()" fill="clear">
+        <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterTasks()" scrollable>
+      <ion-segment-button value="all">
+        <ion-label>Todas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button *ngFor="let cat of categories" [value]="cat.id">
+        <ion-label>{{ cat.name }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
   <ion-list>
-    <ion-item-sliding *ngFor="let task of tasks">
+    <ion-item-sliding *ngFor="let task of filteredTasks" #slidingItem>
       <ion-item>
         <ion-checkbox slot="start" [(ngModel)]="task.completed" (ionChange)="onStatusChange(task)"></ion-checkbox>
-        <ion-label [class.completed]="task.completed">{{ task.title }}</ion-label>
+        <ion-label (click)="changeTaskCategory(task)">
+          <h2 [class.completed]="task.completed">{{ task.title }}</h2>
+          <p>{{ getCategoryName(task.categoryId) }}</p>
+        </ion-label>
       </ion-item>
+
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteTask(task)">Eliminar</ion-item-option>
+        <ion-item-option color="danger" (click)="deleteTask(task, slidingItem)">
+          Eliminar
+        </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+
+  <div *ngIf="tasks.length === 0" class="ion-text-center ion-padding">
+    <p>¡No tienes tareas! Añade una para empezar.</p>
+  </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="promptAddTask()">
