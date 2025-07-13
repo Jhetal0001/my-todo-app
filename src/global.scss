@@ -35,3 +35,83 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+.content-item-list {
+  margin-inline: 2px;
+}
+
+ion-label h2.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+ion-label p {
+  font-size: 0.8em;
+  color: #6b6b6b;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+ion-item-sliding {
+  margin-block-start: 2px;
+  border-radius: 50px;
+  overflow: hidden;
+
+  &>ion-item {
+    margin-block-start: 0;
+    border-radius: 50px 0 0 50px;
+  }
+}
+
+ion-item {
+  margin-block-start: 2px;
+  border-radius: 50px;
+  overflow: hidden;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --background: var(--ion-color-light-tint, #000000);
+}
+
+ion-checkbox {
+  margin-right: 12px;
+  --size: 24px;
+  --border-radius: 50%;
+  padding: 5px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+  color: #888;
+
+  ion-icon {
+    font-size: 5em;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 1.1em;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+    height: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+ion-item-sliding.deleting {
+  animation: fadeOut 0.4s ease-out forwards;
+}

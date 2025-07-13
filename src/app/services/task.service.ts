@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+import { BehaviorSubject } from 'rxjs';
 export interface Category {
   id: number;
   name: string;
@@ -16,110 +16,126 @@ export interface Task {
   providedIn: 'root',
 })
 export class TaskService {
-  private tasks: Task[] = [];
-  private categories: Category[] = [];
-  private nextTaskId = 1;
-  private nextCategoryId = 1;
+  private readonly _tasks = new BehaviorSubject<Task[]>([]);
+  private readonly _categories = new BehaviorSubject<Category[]>([]);
+
+  readonly tasks$ = this._tasks.asObservable();
+  readonly categories$ = this._categories.asObservable();
 
   constructor() {
     this.loadFromStorage();
   }
 
   private loadFromStorage() {
-    const storedTasks = localStorage.getItem('tasks');
-    if (storedTasks) {
-      this.tasks = JSON.parse(storedTasks);
-      this.nextTaskId =
-        this.tasks.length > 0
-          ? Math.max(...this.tasks.map((t) => t.id)) + 1
-          : 1;
-    }
+    try {
+      const storedTasks = localStorage.getItem('tasks');
+      if (storedTasks) {
+        this._tasks.next(JSON.parse(storedTasks));
+      }
 
-    const storedCategories = localStorage.getItem('categories');
-    if (storedCategories) {
-      this.categories = JSON.parse(storedCategories);
-      this.nextCategoryId =
-        this.categories.length > 0
-          ? Math.max(...this.categories.map((c) => c.id)) + 1
-          : 1;
+      const storedCategories = localStorage.getItem('categories');
+      if (storedCategories) {
+        this._categories.next(JSON.parse(storedCategories));
+      }
+    } catch (error) {
+      console.error('Error al cargar datos desde localStorage', error);
     }
   }
 
   private saveTasks() {
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
+    localStorage.setItem('tasks', JSON.stringify(this._tasks.getValue()));
   }
 
   private saveCategories() {
-    localStorage.setItem('categories', JSON.stringify(this.categories));
-  }
-
-  getTasks(): Task[] {
-    return this.tasks;
+    localStorage.setItem(
+      'categories',
+      JSON.stringify(this._categories.getValue())
+    );
   }
 
   addTask(title: string, categoryId?: number) {
+    const currentTasks = this._tasks.getValue();
+    const nextTaskId =
+      currentTasks.length > 0
+        ? Math.max(...currentTasks.map((t) => t.id)) + 1
+        : 1;
+
     const newTask: Task = {
-      id: this.nextTaskId++,
+      id: nextTaskId,
       title: title.trim(),
       completed: false,
       categoryId,
     };
-    this.tasks.push(newTask);
+
+    this._tasks.next([...currentTasks, newTask]);
     this.saveTasks();
   }
 
   updateTask(taskToUpdate: Task) {
-    const index = this.tasks.findIndex((t) => t.id === taskToUpdate.id);
-    if (index > -1) {
-      this.tasks[index] = taskToUpdate;
-      this.saveTasks();
-    }
-  }
+    const currentTasks = this._tasks.getValue();
+    const updatedTasks = currentTasks.map((t) =>
+      t.id === taskToUpdate.id ? taskToUpdate : t
+    );
 
-  deleteTask(id: number) {
-    this.tasks = this.tasks.filter((task) => task.id !== id);
+    this._tasks.next(updatedTasks);
     this.saveTasks();
   }
 
-  getCategories(): Category[] {
-    return this.categories;
+  deleteTask(id: number) {
+    const currentTasks = this._tasks.getValue();
+    const updatedTasks = currentTasks.filter((task) => task.id !== id);
+
+    this._tasks.next(updatedTasks);
+    this.saveTasks();
   }
 
   getCategoryName(id: number): string {
-    const category = this.categories.find((c) => c.id === id);
+    const category = this._categories.getValue().find((c) => c.id === id);
     return category ? category.name : 'Sin categoría';
   }
 
   addCategory(name: string) {
-    if (!name || name.trim().length === 0) return;
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
 
-    const newCategory: Category = {
-      id: this.nextCategoryId++,
-      name: name.trim(),
-    };
-    this.categories.push(newCategory);
+    const currentCategories = this._categories.getValue();
+    const nextCategoryId =
+      currentCategories.length > 0
+        ? Math.max(...currentCategories.map((c) => c.id)) + 1
+        : 1;
+
+    const newCategory: Category = { id: nextCategoryId, name: trimmedName };
+
+    this._categories.next([...currentCategories, newCategory]);
     this.saveCategories();
   }
 
   updateCategory(categoryToUpdate: Category) {
-    const index = this.categories.findIndex(
-      (c) => c.id === categoryToUpdate.id
+    const currentCategories = this._categories.getValue();
+    const updatedCategories = currentCategories.map((c) =>
+      c.id === categoryToUpdate.id ? categoryToUpdate : c
     );
-    if (index > -1) {
-      this.categories[index] = categoryToUpdate;
-      this.saveCategories();
-    }
+
+    this._categories.next(updatedCategories);
+    this.saveCategories();
   }
 
   deleteCategory(id: number) {
-    this.tasks.forEach((task) => {
+    const currentTasks = this._tasks.getValue();
+    const tasksToUpdate = currentTasks.map((task) => {
       if (task.categoryId === id) {
-        delete task.categoryId;
+        const { categoryId, ...rest } = task;
+        return rest;
       }
+      return task;
     });
+    this._tasks.next(tasksToUpdate);
     this.saveTasks();
 
-    this.categories = this.categories.filter((c) => c.id !== id);
+    const currentCategories = this._categories.getValue();
+    const updatedCategories = currentCategories.filter((c) => c.id !== id);
+
+    this._categories.next(updatedCategories);
     this.saveCategories();
   }
 }
