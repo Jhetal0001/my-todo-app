@@ -3,6 +3,16 @@ apply plugin: 'com.android.application'
 android {
     namespace "io.ionic.starter"
     compileSdk rootProject.ext.compileSdkVersion
+    signingConfigs {
+    release {
+        if (project.hasProperty('keystore')) {
+          storeFile file(project.property('keystore.storeFile'))
+          storePassword project.property('keystore.storePassword')
+          keyAlias project.property('keystore.keyAlias')
+          keyPassword project.property('keystore.keyPassword')
+        }
+      }
+    }
     defaultConfig {
         applicationId "io.ionic.starter"
         minSdkVersion rootProject.ext.minSdkVersion

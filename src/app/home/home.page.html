@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Mis Tareas</ion-title>
+    <ion-title>{{ 'HOME.TITLE' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="goToCategories()" fill="clear">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
@@ -11,7 +11,7 @@
   <ion-toolbar *ngIf="categoryFilterEnabled">
     <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterTasks()" scrollable>
       <ion-segment-button value="all">
-        <ion-label>Todas</ion-label>
+        <ion-label>{{ 'COMMONS.ALL' | translate}}</ion-label>
       </ion-segment-button>
       <ion-segment-button *ngFor="let cat of categories" [value]="cat.id">
         <ion-label>{{ cat.name }}</ion-label>
@@ -44,7 +44,7 @@
 
 
   <div *ngIf="tasks.length === 0" class="ion-text-center ion-padding">
-    <p>¡No tienes tareas! Añade una para empezar.</p>
+    <p>{{ 'MESSAGES.NOT_TASK' | translate}}</p>
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">

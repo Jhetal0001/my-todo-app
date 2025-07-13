@@ -1,27 +1,27 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="dismissModal()">Cerrar</ion-button>
+      <ion-button (click)="dismissModal()">{{ "COMMONS.CLOSE" | translate }}</ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Nueva Tarea</ion-title>
+    <ion-title class="ion-text-center">{{ "HOME.NEW_TASK" | translate }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="saveAndClose()" [disabled]="!taskTitle || taskTitle.trim() === ''">Agregar</ion-button>
+      <ion-button (click)="saveAndClose()" [disabled]="!taskTitle || taskTitle.trim() === ''">{{ "COMMONS.ADD" | translate }}</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <ion-item>
-    <ion-input type="text" placeholder="Ej. Comprar leche" [(ngModel)]="taskTitle"></ion-input>
+    <ion-input type="text" [placeholder]=" 'MESSAGES.EXAMPLE_TASK' | translate " [(ngModel)]="taskTitle"></ion-input>
   </ion-item>
 
   <ion-radio-group [(ngModel)]="selectedCategoryId">
     <ion-list-header>
-      <ion-label>Seleccionar Categoría</ion-label>
+      <ion-label>{{ "MESSAGES.SELECT_CAT" | translate }}</ion-label>
     </ion-list-header>
 
     <ion-item>
-      <ion-label>Sin Categoría</ion-label>
+      <ion-label>{{ "MESSAGES.NOT_CATEGORIE" | translate }}</ion-label>
       <ion-radio slot="start" value="0"></ion-radio>
     </ion-item>
 

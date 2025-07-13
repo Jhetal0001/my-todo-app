@@ -1,0 +1,41 @@
+{
+  "HOME": {
+    "TITLE": "Mis Tareas",
+    "SUBTITLE": "Este es un ejemplo de internacionalización.",
+    "BUTTON_TEXT": "Cambiar Idioma",
+    "MANAGE_CATEGORIES": "Gestionar Categorías",
+    "UPDATE_CATEGORIE": "Editar Categoría",
+    "NEW_CATEGORIE": "Nueva Categoría",
+    "NEW_TASK": "Nueva Tarea"
+  },
+  "COMMONS": {
+    "ALL": "Todas",
+    "CLOSE": "Cerrar",
+    "SAVE": "Guardar",
+    "DELETE": "Eliminar",
+    "CANCEL": "Cancelar",
+    "ADD": "Agregar",
+    "COMF_ACTION": "Confirmar Acción",
+    "YOU_SURE": "¿Estás seguro?",
+    "YES_DELETE": "Sí, eliminar",
+    "NOT_KEEP": "No, conservar"
+  },
+  "MESSAGES": {
+    "NOT_TASK": "¡No tienes tareas! Añade una para empezar.",
+    "EXAMPLE_CAT": "Ej. Trabajo, Personal",
+    "EXAMPLE_TASK": "Ej. Validar Cuentas",
+    "SELECT_CAT": "Seleccionar Categoría",
+    "ASIGN_TO": "Asignar a:",
+    "NOT_CATEGORIE": "Sin Categoría",
+    "DELETE_CAT": "¿Eliminar la categoría '{{name}}'?",
+    "ACTION_NOT_UNDONE": "Esta acción no se puede deshacer.",
+    "CAT_DELETE": "Categoría eliminada",
+    "TASK_DELETE": "Tarea eliminada",
+    "UPDATE_CAT": "Se ha actualizado la categoría",
+    "ADD_CATEGORIE": "Se ha agregado una nueva categoría",
+    "UPDATE_TASK": "Se ha actualizado la categoría de la tarea",
+    "ADD_TASK": "Se ha agregado la tarea existosamente",
+    "UPDATE_STATUS_TASK_CLOSE": "Se ha finalizado la tarea",
+    "UPDATE_STATUS_TASK_OPEN": "Se ha reabierto la tarea"
+  }
+}

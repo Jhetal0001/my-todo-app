@@ -20,13 +20,13 @@
       <ion-row>
         <ion-col>
           <ion-button (click)="dismissModal('cancel')" expand="block" fill="outline">
-            Cancelar
+            {{ "COMMONS.CANCEL" | translate }}
           </ion-button>
         </ion-col>
         <ion-col>
           <ion-button (click)="dismissModal('confirm')" expand="block" color="danger">
             <ion-icon slot="start" name="trash-outline"></ion-icon>
-            Eliminar
+            {{ "COMMONS.DELETE" | translate }}
           </ion-button>
         </ion-col>
       </ion-row>
