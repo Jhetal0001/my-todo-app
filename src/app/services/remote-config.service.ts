@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
-import { fetchAndActivate, getBoolean, getRemoteConfig, RemoteConfig } from '@angular/fire/remote-config';
+import {
+  fetchAndActivate,
+  getBooleanChanges,
+  RemoteConfig,
+} from '@angular/fire/remote-config';
+import { environment as ev } from 'src/environments/environment'
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RemoteConfigService {
-  private remoteConfig: RemoteConfig;
+  private readonly _param = new BehaviorSubject<boolean>(false);
+  readonly param$ = this._param.asObservable();
 
-  constructor() {
-    this.remoteConfig = getRemoteConfig();
+  constructor(private remoteConfig: RemoteConfig) {
     this.remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
   }
 
@@ -16,6 +22,7 @@ export class RemoteConfigService {
     try {
       const activated = await fetchAndActivate(this.remoteConfig);
       if (activated) {
+        this.isCategoryFilterEnabled();
         console.log('Remote Config: Nuevos valores activados.');
       } else {
         console.log('Remote Config: Usando valores cacheados.');
@@ -25,7 +32,9 @@ export class RemoteConfigService {
     }
   }
 
-  isCategoryFilterEnabled(): boolean {
-    return getBoolean(this.remoteConfig, 'enable_category_filter');
+  isCategoryFilterEnabled() {
+    getBooleanChanges(this.remoteConfig, ev.paramsRemotes.categoriaFilter).subscribe({
+      next: (param) => this._param.next(param),
+    });
   }
 }

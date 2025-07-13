@@ -17,9 +17,11 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
-  AlertController,
+  ActionSheetController,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { TaskService, Category } from '../../services/task.service';
+import { CategoryModalComponent } from 'src/app/components/category-modal/category-modal.component';
 
 @Component({
   selector: 'app-categories',
@@ -47,67 +49,78 @@ import { TaskService, Category } from '../../services/task.service';
   ],
 })
 export class CategoriesPage {
-  categories: Category[] = [];
+  categories$ = this.taskService.categories$;
 
   constructor(
     private taskService: TaskService,
-    private alertCtrl: AlertController
-  ) {
-    this.categories = this.taskService.getCategories();
-  }
+    private modalCtrl: ModalController,
+    private actionSheetCtrl: ActionSheetController
+  ) {}
 
-  async promptAddCategory() {
-    const alert = await this.alertCtrl.create({
-      header: 'Nueva Categoría',
-      inputs: [
-        { name: 'name', type: 'text', placeholder: 'Nombre de la categoría' },
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            this.taskService.addCategory(data.name);
-          },
-        },
-      ],
+  async openCategoryModal() {
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      breakpoints: [0, 0.5, 0.8],
+      initialBreakpoint: 0.5,
     });
-    await alert.present();
+
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'confirm') {
+      console.log('Categoría a guardar:', data);
+      this.taskService.addCategory(data);
+    }
   }
 
   async editCategory(category: Category) {
-    const alert = await this.alertCtrl.create({
-      header: 'Editar Categoría',
-      inputs: [{ name: 'name', type: 'text', value: category.name }],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            category.name = data.name;
-            this.taskService.updateCategory(category);
-          },
-        },
-      ],
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: {
+        category: category,
+      },
+      breakpoints: [0, 0.5, 0.8],
+      initialBreakpoint: 0.5,
     });
-    await alert.present();
+
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      const updatedCategory: Category = {
+        ...category,
+        name: data,
+      };
+      this.taskService.updateCategory(updatedCategory);
+    }
   }
 
   async confirmDelete(category: Category) {
-    const alert = await this.alertCtrl.create({
-      header: 'Confirmar Borrado',
-      message: `¿Estás seguro de que quieres eliminar la categoría "${category.name}"? Las tareas asociadas quedarán sin categoría.`,
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: `¿Eliminar la categoría "${category.name}"?`,
+      subHeader: 'Esta acción no se puede deshacer.',
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
         {
-          text: 'Eliminar',
+          text: 'Sí, eliminar',
           role: 'destructive',
+          icon: 'trash-outline',
           handler: () => {
             this.taskService.deleteCategory(category.id);
+            console.log(`Categoría ${category.name} eliminada`);
+          },
+        },
+        {
+          text: 'No, conservar',
+          role: 'cancel',
+          icon: 'close-outline',
+          handler: () => {
+            console.log('Borrado cancelado');
           },
         },
       ],
     });
-    await alert.present();
+
+    await actionSheet.present();
   }
 }

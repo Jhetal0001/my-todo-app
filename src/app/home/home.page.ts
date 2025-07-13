@@ -1,91 +1,74 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { IonicModule, AlertController, IonItemSliding, AlertInput } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { TaskService, Task, Category } from '../services/task.service';
 import { RemoteConfigService } from '../services/remote-config.service';
+import { TaskModalComponent } from '../components/task-modal/task-modal.component';
+import { CategorySelectModalComponent } from '../components/category-select-modal/category-select-modal.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ScrollingModule
-  ],
+  imports: [CommonModule, FormsModule, IonicModule, ScrollingModule],
 })
-export class HomePage {
-  tasks: Task[] = [];
+export class HomePage implements OnInit {
+  tasks$ = this.taskService.tasks$;
+  categories$ = this.taskService.categories$;
   categories: Category[] = [];
+  tasks: Task[] = [];
   filteredTasks: Task[] = [];
   selectedCategory: number | 'all' = 'all';
   public categoryFilterEnabled = false;
 
   constructor(
     private taskService: TaskService,
-    private alertCtrl: AlertController,
     private router: Router,
-    private remoteConfigService: RemoteConfigService
+    private remoteConfigService: RemoteConfigService,
+    private modalCtrl: ModalController
   ) {}
 
+  ngOnInit(): void {
+    this.taskService.tasks$.forEach((task) => (this.tasks = task));
+    this.categories$.forEach((cat) => (this.categories = cat));
+    this.remoteConfigService.param$.subscribe({
+      next: (param) => (this.categoryFilterEnabled = param),
+      error: (error) => console.log(error),
+    });
+  }
+
   ionViewWillEnter() {
-    this.tasks = this.taskService.getTasks();
-    this.categories = this.taskService.getCategories();
     this.filterTasks();
-    this.categoryFilterEnabled = this.remoteConfigService.isCategoryFilterEnabled();
+    this.remoteConfigService.isCategoryFilterEnabled();
   }
 
   trackByTaskId(index: number, task: Task): number {
     return task.id;
   }
 
-  async promptAddTask() {
-    const categoryInputs: AlertInput[] = this.categories.map((category) => ({
-      name: 'categoryId',
-      type: 'radio' as const,
-      label: category.name,
-      value: category.id,
-    }));
-
-    categoryInputs.unshift({
-      name: 'categoryId',
-      type: 'radio' as const,
-      label: 'Sin Categoría',
-      value: 0,
-      checked: true,
+  async openAddTaskModal() {
+    const modal = await this.modalCtrl.create({
+      component: TaskModalComponent,
+      componentProps: {
+        categories: this.categories,
+      },
+      breakpoints: [0, 0.6, 1],
+      initialBreakpoint: 0.6,
     });
 
-    const alert = await this.alertCtrl.create({
-      header: 'Nueva Tarea',
-      inputs: [
-        {
-          name: 'title',
-          type: 'text',
-          placeholder: '¿Qué necesitas hacer?',
-        },
-        ...categoryInputs,
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Agregar',
-          handler: (data) => {
-            if (data.title && data.title.trim() !== '') {
-              const categoryId =
-                data.categoryId === 0 ? undefined : data.categoryId;
-              this.taskService.addTask(data.title, categoryId);
-              this.ionViewWillEnter();
-            }
-          },
-        },
-      ],
-    });
-    await alert.present();
+    await modal.present();
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'confirm') {
+      if (data && data.title) {
+        const categoryId = data.categoryId == 0 ? undefined : data.categoryId;
+
+        this.taskService.addTask(data.title, categoryId);
+        this.filterTasks();
+      }
+    }
   }
 
   filterTasks() {
@@ -99,38 +82,30 @@ export class HomePage {
   }
 
   async changeTaskCategory(task: Task) {
-    const categoryInputs = this.categories.map((cat) => ({
-      name: 'categoryId',
-      type: 'radio' as const,
-      label: cat.name,
-      value: cat.id,
-      checked: task.categoryId === cat.id,
-    }));
-
-    categoryInputs.unshift({
-      name: 'categoryId',
-      type: 'radio' as const,
-      label: 'Sin Categoría',
-      value: 0,
-      checked: task.categoryId === undefined,
+    const modal = await this.modalCtrl.create({
+      component: CategorySelectModalComponent,
+      componentProps: {
+        categories: this.categories,
+        currentCategoryId: task.categoryId,
+      },
+      breakpoints: [0, 0.5],
+      initialBreakpoint: 0.5,
     });
 
-    const alert = await this.alertCtrl.create({
-      header: 'Seleccionar Categoría',
-      inputs: categoryInputs,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Ok',
-          handler: (categoryId) => {
-            task.categoryId = categoryId === 0 ? undefined : categoryId;
-            this.taskService.updateTask(task);
-            this.filterTasks();
-          },
-        },
-      ],
-    });
-    await alert.present();
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      const newCategoryId = data === 0 ? undefined : data;
+
+      if (newCategoryId !== task.categoryId) {
+        const updatedTask = { ...task, categoryId: newCategoryId };
+        this.taskService.updateTask(updatedTask);
+
+        this.filterTasks();
+      }
+    }
   }
 
   onStatusChange(task: Task) {
@@ -139,8 +114,10 @@ export class HomePage {
 
   deleteTask(taskToDelete: Task, index: number) {
     this.taskService.deleteTask(taskToDelete.id);
-    this.tasks = this.tasks.filter(task => task.id !== taskToDelete.id);
-    this.filteredTasks = this.filteredTasks.filter(task => task.id !== taskToDelete.id);
+    this.tasks = this.tasks.filter((task) => task.id !== taskToDelete.id);
+    this.filteredTasks = this.filteredTasks.filter(
+      (task) => task.id !== taskToDelete.id
+    );
   }
 
   getCategoryName(id?: number): string {

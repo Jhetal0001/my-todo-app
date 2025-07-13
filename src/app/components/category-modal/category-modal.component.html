@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">
+        Cerrar
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">{{ isEditMode ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="saveAndClose()" [disabled]="!categoryName || categoryName.trim() === ''">
+        Guardar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-input type="text" placeholder="Ej. Trabajo, Personal" [(ngModel)]="categoryName"
+      (keyup.enter)="saveAndClose()"></ion-input>
+  </ion-item>
+</ion-content>

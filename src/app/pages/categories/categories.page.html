@@ -9,9 +9,10 @@
 
 <ion-content [fullscreen]="true">
   <ion-list>
-    <ion-item-sliding *ngFor="let category of categories">
+    <ion-item-sliding *ngFor="let category of categories$ | async">
       <ion-item>
         <ion-label>{{ category.name }}</ion-label>
+        <ion-icon [name]="'chevron-back-outline'" slot="end"></ion-icon>
       </ion-item>
 
       <ion-item-options side="end">
@@ -26,7 +27,7 @@
   </ion-list>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="promptAddCategory()">
+    <ion-fab-button (click)="openCategoryModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
