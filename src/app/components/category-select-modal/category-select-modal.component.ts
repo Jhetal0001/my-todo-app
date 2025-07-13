@@ -1,17 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
 import { Category } from 'src/app/services/task.service';
-
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonList, IonListHeader, IonLabel, IonItem, IonRadio, ModalController, IonRadioGroup } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-category-select-modal',
   templateUrl: './category-select-modal.component.html',
   standalone: true,
-  imports: [CommonModule, IonicModule, FormsModule, TranslateModule],
+  imports: [IonRadioGroup, IonRadio, IonItem, IonLabel, IonListHeader, IonList, IonContent, IonTitle, IonButton, IonButtons, IonToolbar, IonHeader, CommonModule, FormsModule, TranslateModule],
 })
 export class CategorySelectModalComponent implements OnInit {
   @Input() categories: Category[] = [];

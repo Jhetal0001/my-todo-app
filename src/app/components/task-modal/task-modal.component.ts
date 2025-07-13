@@ -1,15 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { ModalController } from '@ionic/angular';
 import { Category } from 'src/app/models/category.model';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonItem, IonListHeader, IonLabel, IonRadio, IonInput, ModalController, IonRadioGroup, IonList } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-task-modal',
   templateUrl: './task-modal.component.html',
-  imports: [CommonModule, IonicModule, FormsModule, TranslateModule],
+  imports: [IonList, IonRadioGroup, IonRadio, IonLabel, IonListHeader, IonItem, IonContent, IonTitle, IonButton, IonButtons, IonToolbar, IonHeader, CommonModule, FormsModule, IonInput, TranslateModule],
 })
 export class TaskModalComponent {
   @Input() categories: Category[] = [];

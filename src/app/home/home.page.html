@@ -25,7 +25,7 @@
     <div class="content-item-list">
       <ion-item-sliding *ngFor="let task of filteredTasks; let i = index">
         <ion-item>
-          <ion-checkbox slot="start" [(ngModel)]="task.completed" (ionChange)="onStatusChange(task)"></ion-checkbox>
+          <ion-checkbox [name]="'task-completed-' + i" slot="start" [(ngModel)]="task.completed" (ionChange)="onStatusChange(task)"></ion-checkbox>
           <ion-label (click)="changeTaskCategory(task)">
             <h2 [class.completed]="task.completed">{{ task.title }}</h2>
             <p>{{ getCategoryName(task.categoryId) }}</p>

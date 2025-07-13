@@ -14,21 +14,21 @@
   <ion-item>
     <ion-input type="text" [placeholder]=" 'MESSAGES.EXAMPLE_TASK' | translate " [(ngModel)]="taskTitle"></ion-input>
   </ion-item>
-
-  <ion-radio-group [(ngModel)]="selectedCategoryId">
+  <ion-list>
     <ion-list-header>
       <ion-label>{{ "MESSAGES.SELECT_CAT" | translate }}</ion-label>
     </ion-list-header>
+    <ion-radio-group [(ngModel)]="selectedCategoryId">
+      <ion-item>
+        <ion-label>{{ "MESSAGES.NOT_CATEGORIE" | translate }}</ion-label>
+        <ion-radio slot="start" value="0"></ion-radio>
+      </ion-item>
 
-    <ion-item>
-      <ion-label>{{ "MESSAGES.NOT_CATEGORIE" | translate }}</ion-label>
-      <ion-radio slot="start" value="0"></ion-radio>
-    </ion-item>
-
-    <ion-item *ngFor="let category of categories">
-      <ion-label>{{ category.name }}</ion-label>
-      <ion-radio slot="start" [value]="category.id"></ion-radio>
-    </ion-item>
-  </ion-radio-group>
+      <ion-item *ngFor="let category of categories">
+        <ion-label>{{ category.name }}</ion-label>
+        <ion-radio slot="start" [value]="category.id"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
 
 </ion-content>

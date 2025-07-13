@@ -11,12 +11,11 @@
 </ion-header>
 
 <ion-content>
-  <ion-radio-group [(ngModel)]="selectedCategoryId">
-    <ion-list>
-      <ion-list-header>
-        <ion-label>{{ "MESSAGES.ASIGN_TO" | translate }}</ion-label>
-      </ion-list-header>
-
+  <ion-list>
+    <ion-list-header>
+      <ion-label>{{ "MESSAGES.ASIGN_TO" | translate }}</ion-label>
+    </ion-list-header>
+    <ion-radio-group [(ngModel)]="selectedCategoryId">
       <ion-item>
         <ion-label>{{ "MESSAGES.NOT_CATEGORIE" | translate }}</ion-label>
         <ion-radio slot="start" [value]="0"></ion-radio>
@@ -26,6 +25,6 @@
         <ion-label>{{ cat.name }}</ion-label>
         <ion-radio slot="start" [value]="cat.id"></ion-radio>
       </ion-item>
-    </ion-list>
-  </ion-radio-group>
+    </ion-radio-group>
+  </ion-list>
 </ion-content>

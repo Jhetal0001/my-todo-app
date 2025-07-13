@@ -3,18 +3,18 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { TaskService, Task, Category } from '../services/task.service';
 import { RemoteConfigService } from '../services/remote-config.service';
 import { TaskModalComponent } from '../components/task-modal/task-modal.component';
 import { CategorySelectModalComponent } from '../components/category-select-modal/category-select-modal.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ModalController, ToastController, IonHeader, IonToolbar, IonContent, IonList, IonItemSliding, IonItem, IonLabel, IonIcon, IonItemOptions, IonItemOption, IonFab, IonFabButton, IonButtons, IonButton, IonTitle, IonSegmentButton, IonCheckbox, IonSegment } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [CommonModule, FormsModule, IonicModule, ScrollingModule, TranslateModule ],
+  imports: [IonCheckbox, IonSegmentButton, IonTitle, IonButton, IonButtons, IonFabButton, IonFab, IonItemOption, IonItemOptions, IonIcon, IonLabel, IonItem, IonItemSliding, IonList, IonContent, IonToolbar, IonHeader, CommonModule, FormsModule, ScrollingModule, TranslateModule, IonSegment ],
 })
 export class HomePage implements OnInit {
   tasks$ = this.taskService.tasks$;
