@@ -8,7 +8,7 @@
     <ion-title class="ion-text-center">{{ isEditMode ? ('HOME.UPDATE_CATEGORIE' | translate) : ('HOME.NEW_CATEGORIE' |
       translate) }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="saveAndClose()" [disabled]="!categoryName || categoryName.trim() === ''">
+      <ion-button (click)="saveAndClose()">
         {{ "COMMONS.SAVE" | translate }}
       </ion-button>
     </ion-buttons>
@@ -17,7 +17,7 @@
 
 <ion-content class="ion-padding">
   <ion-item>
-    <ion-input type="text" [placeholder]="'MESSAGES.EXAMPLE_CAT' | translate" [(ngModel)]="categoryName"
-      (keyup.enter)="saveAndClose()"></ion-input>
+    <ion-input type="text" [placeholder]="'MESSAGES.EXAMPLE_CAT' | translate" [(ngModel)]="categoryName" required
+      [errorText]=" 'MESSAGES.ENTER_NAME_CATEGORIE' | translate "></ion-input>
   </ion-item>
 </ion-content>

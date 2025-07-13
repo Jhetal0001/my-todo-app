@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   fetchAndActivate,
-  getBooleanChanges,
+  getBoolean,
   RemoteConfig,
 } from '@angular/fire/remote-config';
 import { environment as ev } from 'src/environments/environment'
@@ -15,7 +15,7 @@ export class RemoteConfigService {
   readonly param$ = this._param.asObservable();
 
   constructor(private remoteConfig: RemoteConfig) {
-    this.remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
+    this.remoteConfig.settings.minimumFetchIntervalMillis = 10000;
   }
 
   async initialize() {
@@ -33,8 +33,7 @@ export class RemoteConfigService {
   }
 
   isCategoryFilterEnabled() {
-    getBooleanChanges(this.remoteConfig, ev.paramsRemotes.categoriaFilter).subscribe({
-      next: (param) => this._param.next(param),
-    });
+    const param = getBoolean(this.remoteConfig, ev.paramsRemotes.categoriaFilter);
+    this._param.next(param);
   }
 }

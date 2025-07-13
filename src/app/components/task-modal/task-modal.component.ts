@@ -14,7 +14,7 @@ export class TaskModalComponent {
   @Input() categories: Category[] = [];
 
   taskTitle: string = '';
-  selectedCategoryId: string | number = 0;
+  selectedCategoryId: string | number = '0';
 
   constructor(private modalCtrl: ModalController) {}
 

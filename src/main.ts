@@ -4,10 +4,10 @@ import { appConfig } from './app/app.config';
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { addIcons } from 'ionicons';
-import { optionsOutline, add, trash, create, close, save, chevronForwardOutline, chevronBackOutline } from 'ionicons/icons';
+import { options, add, trash, create, close, save, chevronForwardOutline, chevronBackOutline } from 'ionicons/icons';
 
 addIcons({
-  'options-outline': optionsOutline,
+  'options': options,
   'add': add,
   'trash': trash,
   'create': create,

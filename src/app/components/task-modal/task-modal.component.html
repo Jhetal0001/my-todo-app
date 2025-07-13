@@ -5,14 +5,15 @@
     </ion-buttons>
     <ion-title class="ion-text-center">{{ "HOME.NEW_TASK" | translate }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="saveAndClose()" [disabled]="!taskTitle || taskTitle.trim() === ''">{{ "COMMONS.ADD" | translate }}</ion-button>
+      <ion-button (click)="saveAndClose()">{{ "COMMONS.ADD" | translate }}</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <ion-item>
-    <ion-input type="text" [placeholder]=" 'MESSAGES.EXAMPLE_TASK' | translate " [(ngModel)]="taskTitle"></ion-input>
+    <ion-input type="text" [placeholder]=" 'MESSAGES.EXAMPLE_TASK' | translate " [(ngModel)]="taskTitle" required
+      [errorText]=" 'MESSAGES.ENTER_NAME_TASK' | translate "></ion-input>
   </ion-item>
   <ion-list>
     <ion-list-header>

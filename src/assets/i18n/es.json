@@ -36,6 +36,8 @@
     "UPDATE_TASK": "Se ha actualizado la categoría de la tarea",
     "ADD_TASK": "Se ha agregado la tarea existosamente",
     "UPDATE_STATUS_TASK_CLOSE": "Se ha finalizado la tarea",
-    "UPDATE_STATUS_TASK_OPEN": "Se ha reabierto la tarea"
+    "UPDATE_STATUS_TASK_OPEN": "Se ha reabierto la tarea",
+    "ENTER_NAME_TASK": "Digite el nombre de la tarea",
+    "ENTER_NAME_CATEGORIE": "Digite el nombre de la categoría"
   }
 }
