@@ -78,8 +78,8 @@ export class HomePage implements OnInit {
       componentProps: {
         categories: this.categories,
       },
-      breakpoints: [0, 0.6, 1],
-      initialBreakpoint: 0.6,
+      breakpoints: [0, 0.25, 0.8, 1],
+      initialBreakpoint: 0.8,
     });
 
     await modal.present();

@@ -76,8 +76,8 @@ export class CategoriesPage {
   async openCategoryModal() {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,
-      breakpoints: [0, 0.5, 0.8],
-      initialBreakpoint: 0.5,
+      breakpoints: [0, 0.25, 0.8, 1],
+      initialBreakpoint: 0.8,
     });
 
     await modal.present();
@@ -95,8 +95,8 @@ export class CategoriesPage {
       componentProps: {
         category: category,
       },
-      breakpoints: [0, 0.5, 0.8],
-      initialBreakpoint: 0.5,
+      breakpoints: [0, 0.25, 0.8, 1],
+      initialBreakpoint: 0.8,
     });
 
     await modal.present();
