@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "appId": "c12d2b41",
+      "platform": "ios",
+      "ios": {
+        "path": "ios"
+      }
+    }
+  ]
+}
