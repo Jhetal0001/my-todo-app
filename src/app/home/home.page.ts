@@ -3,17 +3,18 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { IonicModule, ModalController } from '@ionic/angular';
 import { TaskService, Task, Category } from '../services/task.service';
 import { RemoteConfigService } from '../services/remote-config.service';
 import { TaskModalComponent } from '../components/task-modal/task-modal.component';
 import { CategorySelectModalComponent } from '../components/category-select-modal/category-select-modal.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ModalController, ToastController, IonHeader, IonToolbar, IonContent, IonItemSliding, IonItem, IonLabel, IonIcon, IonItemOptions, IonItemOption, IonFab, IonFabButton, IonButtons, IonButton, IonTitle, IonSegmentButton, IonCheckbox, IonSegment, IonList } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [CommonModule, FormsModule, IonicModule, ScrollingModule],
+  imports: [IonList, IonCheckbox, IonSegmentButton, IonTitle, IonButton, IonButtons, IonFabButton, IonFab, IonItemOption, IonItemOptions, IonIcon, IonLabel, IonItem, IonItemSliding, IonContent, IonToolbar, IonHeader, CommonModule, FormsModule, ScrollingModule, TranslateModule, IonSegment ],
 })
 export class HomePage implements OnInit {
   tasks$ = this.taskService.tasks$;
@@ -23,13 +24,18 @@ export class HomePage implements OnInit {
   filteredTasks: Task[] = [];
   selectedCategory: number | 'all' = 'all';
   public categoryFilterEnabled = false;
+  currentLang: string;
 
   constructor(
     private taskService: TaskService,
     private router: Router,
     private remoteConfigService: RemoteConfigService,
-    private modalCtrl: ModalController
-  ) {}
+    private modalCtrl: ModalController,
+    private translate: TranslateService,
+    private toast: ToastController
+  ) {
+    this.currentLang = this.translate.currentLang;
+  }
 
   ngOnInit(): void {
     this.taskService.tasks$.forEach((task) => (this.tasks = task));
@@ -45,6 +51,23 @@ export class HomePage implements OnInit {
     this.remoteConfigService.isCategoryFilterEnabled();
   }
 
+  switchLanguage() {
+    debugger
+    this.currentLang = this.currentLang === 'es' ? 'es' : 'en';
+    this.translate.use(this.currentLang);
+  }
+
+  async toastView(message: string, color: string, position: 'top' | 'bottom' | 'middle' = 'bottom') {
+    const toast = await this.toast.create({
+      message: message,
+      duration: 2000,
+      position: position,
+      color: color,
+      animated: true,
+    });
+    toast.present();
+  }
+
   trackByTaskId(index: number, task: Task): number {
     return task.id;
   }
@@ -55,8 +78,8 @@ export class HomePage implements OnInit {
       componentProps: {
         categories: this.categories,
       },
-      breakpoints: [0, 0.6, 1],
-      initialBreakpoint: 0.6,
+      breakpoints: [0, 0.25, 0.8, 1],
+      initialBreakpoint: 0.8,
     });
 
     await modal.present();
@@ -66,6 +89,7 @@ export class HomePage implements OnInit {
         const categoryId = data.categoryId == 0 ? undefined : data.categoryId;
 
         this.taskService.addTask(data.title, categoryId);
+        this.toastView(this.translate.instant('MESSAGES.ADD_TASK'), 'success')
         this.filterTasks();
       }
     }
@@ -102,7 +126,7 @@ export class HomePage implements OnInit {
       if (newCategoryId !== task.categoryId) {
         const updatedTask = { ...task, categoryId: newCategoryId };
         this.taskService.updateTask(updatedTask);
-
+        this.toastView(this.translate.instant('MESSAGES.UPDATE_TASK'), 'success')
         this.filterTasks();
       }
     }
@@ -110,6 +134,8 @@ export class HomePage implements OnInit {
 
   onStatusChange(task: Task) {
     this.taskService.updateTask(task);
+    const message = task.completed? 'MESSAGES.UPDATE_STATUS_TASK_CLOSE' : 'MESSAGES.UPDATE_STATUS_TASK_OPEN';
+    this.toastView(this.translate.instant(message), 'success')
   }
 
   deleteTask(taskToDelete: Task, index: number) {
@@ -118,10 +144,11 @@ export class HomePage implements OnInit {
     this.filteredTasks = this.filteredTasks.filter(
       (task) => task.id !== taskToDelete.id
     );
+    this.toastView(this.translate.instant('MESSAGES.TASK_DELETE'), 'primary')
   }
 
   getCategoryName(id?: number): string {
-    if (id === undefined) return 'Sin Categoría';
+    if (id === undefined) return this.translate.instant('MESSAGES.NOT_CATEGORIE');
     return this.taskService.getCategoryName(id);
   }
 

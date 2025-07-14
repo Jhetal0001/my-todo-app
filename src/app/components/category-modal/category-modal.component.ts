@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController, IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { Category } from 'src/app/models/category.model';
+import { TranslateModule } from '@ngx-translate/core';
+import { IonButton, IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonItem, IonInput, ModalController } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-category-modal',
   templateUrl: './category-modal.component.html',
-  imports: [IonicModule, FormsModule],
+  imports: [IonItem, IonContent, IonTitle, IonButtons, IonToolbar, IonHeader, IonButton, FormsModule, TranslateModule, IonInput ],
 })
 export class CategoryModalComponent implements OnInit {
   @Input() category!: Category;

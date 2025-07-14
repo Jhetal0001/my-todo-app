@@ -2,6 +2,8 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import config from "capacitor.config";
+
 export const environment = {
   production: false,
   firebaseConfig: {
@@ -14,6 +16,9 @@ export const environment = {
   },
   paramsRemotes: {
     categoriaFilter: 'enable_category_filter'
+  },
+  config: {
+    language: 'es'
   }
 };
 

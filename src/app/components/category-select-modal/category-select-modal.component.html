@@ -1,24 +1,23 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="cancel()">Cerrar</ion-button>
+      <ion-button (click)="cancel()">{{ "COMMONS.CLOSE" | translate }}</ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Seleccionar Categoría</ion-title>
+    <ion-title class="ion-text-center">{{ "MESSAGES.SELECT_CAT" | translate}}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="confirm()">Guardar</ion-button>
+      <ion-button (click)="confirm()">{{ "COMMONS.SAVE" | translate }}</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-radio-group [(ngModel)]="selectedCategoryId">
-    <ion-list>
-      <ion-list-header>
-        <ion-label>Asignar a:</ion-label>
-      </ion-list-header>
-
+  <ion-list>
+    <ion-list-header>
+      <ion-label>{{ "MESSAGES.ASIGN_TO" | translate }}</ion-label>
+    </ion-list-header>
+    <ion-radio-group [(ngModel)]="selectedCategoryId">
       <ion-item>
-        <ion-label>Sin Categoría</ion-label>
+        <ion-label>{{ "MESSAGES.NOT_CATEGORIE" | translate }}</ion-label>
         <ion-radio slot="start" [value]="0"></ion-radio>
       </ion-item>
 
@@ -26,6 +25,6 @@
         <ion-label>{{ cat.name }}</ion-label>
         <ion-radio slot="start" [value]="cat.id"></ion-radio>
       </ion-item>
-    </ion-list>
-  </ion-radio-group>
+    </ion-radio-group>
+  </ion-list>
 </ion-content>

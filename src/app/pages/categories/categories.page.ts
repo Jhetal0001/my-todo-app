@@ -19,9 +19,11 @@ import {
   IonIcon,
   ActionSheetController,
   ModalController,
+  ToastController,
 } from '@ionic/angular/standalone';
 import { TaskService, Category } from '../../services/task.service';
 import { CategoryModalComponent } from 'src/app/components/category-modal/category-modal.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-categories',
@@ -46,6 +48,7 @@ import { CategoryModalComponent } from 'src/app/components/category-modal/catego
     IonToolbar,
     CommonModule,
     FormsModule,
+    TranslateModule
   ],
 })
 export class CategoriesPage {
@@ -54,22 +57,35 @@ export class CategoriesPage {
   constructor(
     private taskService: TaskService,
     private modalCtrl: ModalController,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private translate: TranslateService,
+    private toast: ToastController,
   ) {}
+
+  async toastView(message: string, color: string, position: 'top' | 'bottom' | 'middle' = 'bottom') {
+    const toast = await this.toast.create({
+      message: message,
+      duration: 2000,
+      position: position,
+      color: color,
+      animated: true,
+    });
+    toast.present();
+  }
 
   async openCategoryModal() {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,
-      breakpoints: [0, 0.5, 0.8],
-      initialBreakpoint: 0.5,
+      breakpoints: [0, 0.25, 0.8, 1],
+      initialBreakpoint: 0.8,
     });
 
     await modal.present();
 
     const { data, role } = await modal.onWillDismiss();
     if (role === 'confirm') {
-      console.log('Categoría a guardar:', data);
       this.taskService.addCategory(data);
+      this.toastView(this.translate.instant('MESSAGES.ADD_CATEGORIE'), 'success')
     }
   }
 
@@ -79,8 +95,8 @@ export class CategoriesPage {
       componentProps: {
         category: category,
       },
-      breakpoints: [0, 0.5, 0.8],
-      initialBreakpoint: 0.5,
+      breakpoints: [0, 0.25, 0.8, 1],
+      initialBreakpoint: 0.8,
     });
 
     await modal.present();
@@ -93,29 +109,29 @@ export class CategoriesPage {
         name: data,
       };
       this.taskService.updateCategory(updatedCategory);
+      this.toastView(this.translate.instant('MESSAGES.UPDATE_CAT'), 'success')
     }
   }
 
   async confirmDelete(category: Category) {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: `¿Eliminar la categoría "${category.name}"?`,
-      subHeader: 'Esta acción no se puede deshacer.',
+      header: this.translate.instant('MESSAGES.DELETE_CAT', { name: category.name }),
+      subHeader:  this.translate.instant('MESSAGES.ACTION_NOT_UNDONE'),
       buttons: [
         {
-          text: 'Sí, eliminar',
+          text: this.translate.instant('COMMONS.YES_DELETE'),
           role: 'destructive',
-          icon: 'trash-outline',
+          icon: 'trash',
           handler: () => {
             this.taskService.deleteCategory(category.id);
-            console.log(`Categoría ${category.name} eliminada`);
+            this.toastView(this.translate.instant('MESSAGES.CAT_DELETE'), 'primary')
           },
         },
         {
-          text: 'No, conservar',
+          text: this.translate.instant('COMMONS.NOT_KEEP'),
           role: 'cancel',
-          icon: 'close-outline',
+          icon: 'close',
           handler: () => {
-            console.log('Borrado cancelado');
           },
         },
       ],
