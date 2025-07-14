@@ -21,27 +21,28 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list>
-    <div class="content-item-list">
-      <ion-item-sliding *ngFor="let task of filteredTasks; let i = index">
-        <ion-item>
-          <ion-checkbox [name]="'task-completed-' + i" slot="start" [(ngModel)]="task.completed" (ionChange)="onStatusChange(task)"></ion-checkbox>
-          <ion-label (click)="changeTaskCategory(task)">
-            <h2 [class.completed]="task.completed">{{ task.title }}</h2>
-            <p>{{ getCategoryName(task.categoryId) }}</p>
-          </ion-label>
-          <ion-icon name="chevron-back-outline" slot="end"></ion-icon>
-        </ion-item>
+  <cdk-virtual-scroll-viewport itemSize="56" minBufferPx="900" maxBufferPx="1350">
+    <ion-list>
+      <div class="content-item-list">
+        <ion-item-sliding *cdkVirtualFor="let task of filteredTasks; let i = index">
+          <ion-item>
+            <ion-checkbox [name]="'task-completed-' + i" slot="start" [(ngModel)]="task.completed" (ionChange)="onStatusChange(task)"></ion-checkbox>
+            <ion-label (click)="changeTaskCategory(task)">
+              <h2 [class.completed]="task.completed">{{ task.title }}</h2>
+              <p>{{ getCategoryName(task.categoryId) }}</p>
+            </ion-label>
+            <ion-icon name="chevron-back-outline" slot="end"></ion-icon>
+          </ion-item>
 
-        <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="deleteTask(task, i)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
-          </ion-item-option>
-        </ion-item-options>
-      </ion-item-sliding>
-    </div>
-  </ion-list>
-
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="deleteTask(task, i)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </div>
+    </ion-list>
+  </cdk-virtual-scroll-viewport>
 
   <div *ngIf="tasks.length === 0" class="ion-text-center ion-padding">
     <p>{{ 'MESSAGES.NOT_TASK' | translate}}</p>

@@ -8,13 +8,13 @@ import { RemoteConfigService } from '../services/remote-config.service';
 import { TaskModalComponent } from '../components/task-modal/task-modal.component';
 import { CategorySelectModalComponent } from '../components/category-select-modal/category-select-modal.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ModalController, ToastController, IonHeader, IonToolbar, IonContent, IonList, IonItemSliding, IonItem, IonLabel, IonIcon, IonItemOptions, IonItemOption, IonFab, IonFabButton, IonButtons, IonButton, IonTitle, IonSegmentButton, IonCheckbox, IonSegment } from "@ionic/angular/standalone";
+import { ModalController, ToastController, IonHeader, IonToolbar, IonContent, IonItemSliding, IonItem, IonLabel, IonIcon, IonItemOptions, IonItemOption, IonFab, IonFabButton, IonButtons, IonButton, IonTitle, IonSegmentButton, IonCheckbox, IonSegment, IonList } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonCheckbox, IonSegmentButton, IonTitle, IonButton, IonButtons, IonFabButton, IonFab, IonItemOption, IonItemOptions, IonIcon, IonLabel, IonItem, IonItemSliding, IonList, IonContent, IonToolbar, IonHeader, CommonModule, FormsModule, ScrollingModule, TranslateModule, IonSegment ],
+  imports: [IonList, IonCheckbox, IonSegmentButton, IonTitle, IonButton, IonButtons, IonFabButton, IonFab, IonItemOption, IonItemOptions, IonIcon, IonLabel, IonItem, IonItemSliding, IonContent, IonToolbar, IonHeader, CommonModule, FormsModule, ScrollingModule, TranslateModule, IonSegment ],
 })
 export class HomePage implements OnInit {
   tasks$ = this.taskService.tasks$;
